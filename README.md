@@ -2,15 +2,15 @@
 
 Este projeto é um sistema de e-commerce desenvolvido em Laravel, permitindo a venda de produtos digitais. Os usuários podem visualizar uma lista de produtos, mas informações detalhadas só estão disponíveis para usuários autenticados.
 
-<div align="center">
+<div width="600" align="center">
 <img src="https://github.com/BabiMariano/EcommerceDigitalProduct/assets/117331370/8bf048a4-2220-49bc-b62c-dca67989efaf" alt="">
 </div>
 
-<div align="center">
+<div width="600" align="center">
 <img src="https://github.com/BabiMariano/EcommerceDigitalProduct/assets/117331370/65117b51-77d3-4b14-bbb8-c099edf1d92a" alt="">
 </div>
 
-<div align="center">
+<div width="600" align="center">
 <img src="https://github.com/BabiMariano/EcommerceDigitalProduct/assets/117331370/437f6e05-68fb-4320-a688-08ecb2205ba7" alt="">
 </div>
 
