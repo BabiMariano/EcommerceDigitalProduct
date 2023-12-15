@@ -1,0 +1,280 @@
+Comandos laravel
+- composer create-project laravel/laravel name-project -> criar projeto laravel
+
+** CRIANDO CONTROLADORES **
+- php artisan make:controller ProdutoController -> no dir raiz da app, crie um novo controlador,
+    após criar o controlador defina dentro dele os metodos informados nas rotas criadas
+
+- php artisan make:controller UserController --resource -> no dir raiz da app, crie um novo controlador,
+    após criar o controlador dentro dele será criado automaticamente com os methodos necessários
+    nome do controller no singular
+
+
+** MANIPULANDO ROTAS **
+- php artisan route:list -> ver rotas definidas
+- php artisan route:cache -> Cria arquivo de cache de rota para deixar o carregamento mais rápido
+- php artisan route:clear -> remove arquivo de cache de rota
+
+
+** MANIPULANDO BANCO DE DADOS **
+- php artisan migrate -> irá fazer a migação das tabelas criadas para o bd
+- php artisan migrate:rollback -> irá desfazer a última migração
+- php artisan migrate:reset -> reverte todas as migrações do bd
+- php artisan migrate:refresh -> irá resetar todas as migrações feitas, e executar as migrações novamente
+- php artisan migrate:fresh -> irá excluir as tabelas todas as tabelas do bd, e executar as migrações novamente
+- php artisan migrate:status -> ver status das tabelas criadas(ver se tabela foi migrada ou está pendente)
+
+- paramentro Blueprint -> O Blueprint é uma classe do LARAVEL utilizada para definir as operações que devem ser realizadas
+    no banco de dados, nas operações de migração.
+
+- composer require doctrine/dbal -> Instalar dependencia para modificar colunas do banco de dados,
+    e depois defina as configs no arquivo de config/database.php
+
+- php artisan make:migration create_nome-table_table -> criar a tabela, usar o create e o table no inicio e fim p/ a table
+    vir pré-configurada, nome da table no plural
+    - php artisan make:migration nome-table --create=nome-table -> criar a tabela, forma alternativa
+
+- Para deletar uma tabela ou renomea-lá: crie uma nova make:migration com o schema::rename/dropifexist('produto', 'produtos')
+
+** MODELS(ENTIDADES DO BANCO DE DADOS) **
+-- Ao usar o Eloquent, cada tabela do bd possui um "Modelo" correspondente que é usado para interagir com aquela tabela.
+    Além de recuperar registros da tabela do bd, os modelos do Eloquent também permitem inserir, atualizar e excluir registros da tabela.
+    Tabela no plural e nome do model no singular
+    Responsavel pela manipulação do bd
+
+-- php artisan make:model nomeSingular -> criar model p/ interagir com com o bd, ao cia-ló defina o namespace no controler referente ao model
+-- dd() -> serve para debugar, é uma junção do vardump com o die
+-- php artisan make:model nomeModel -mfscr -> irá criar o model, o migration, o factory, o seeder e o controler resource ao mesmo tempo
+-- Se preciso renome-o numero da migration pra que seja executada na ordem correta
+
+
+** SEEDERS **
+-- php artisan make:seeder UsersSeeder -> criar o seeder que serve para inserir dados diretamente no bd através de uma classe, sem precisar inserir manualmente
+-- php artisan db:seed -> executar os seeders
+-- Após criar-ló referencie no seeder o model relacionado a ele . ex: use App\Models\User
+-- após criar os dados que serão inseridos no bd, informe no databaseSeeder os seeders que serão executados
+-- nome do seeder no plural
+
+** FACTORY **
+-- php artisan make:factory CategoriaFactory
+-- são usadas para criar dados falsos ou fictícios para testar seus aplicativos. (nome no singular)
+-- Após criar o factory, crie um seeder p/ especificar a quantidade de dados que será gerado, e o execute-o(db:seed)
+
+** COMENTÁRIOS, HTML**
+-- {{-- comentário --}} -> criar comentários na blade, não é rendezerizado no código fonte
+
+-- {{ $html }} -> o texto será renderizado exetamente igual ao conteudo escrito na variavel, com os escapes
+    ex: $html = '<h1> Olá </h1>' //saida <h1> Olá </h1>
+
+-- {!! $html !!} -> Só será renderizado o texto, sem o escape
+    ex: $html = '<h1> Olá </h1>' //saida  Olá
+
+-- {{ $teste ?? 'padrão' }} -> se a variavel não estiver definida, ela irá receber o valor definido após os ??
+
+** VIEW PRINCIPAL **
+-- @yield() -> é inserido no arq. de view principal que é c/ um layout, que é o que possui a estrutura html. O yield
+    serve para marcar o conteudo que será inserido no espaço determinado. ex: @yield('conteudo)
+
+-- @section() -> irá abrir a seção p/ o conteúdo que seja inserido dentro da section.
+    @section('conteudo')
+
+    @endsection
+
+
+** VIEWS **
+-- php artisan view:cache -> força o laravel a pré-compilar as views
+-- php artisan view:clear -> quando feita alguma alteração na view e essa alteração não é aplicada, é porque a view foi
+    pré-compilada e armazenada em cache, então use o clear para limpar o cache
+
+
+
+** PADRONIZAR PAGE DE ERRORS **
+-- criar uma pasta dentro de views c/ o nome de ERRORS, e dentro dela crie os arq. c/ os numeros dos errors
+    p/ exibir cada erro com uma page personalizada. ex: 404.blade.php
+
+** ESTRUTURAS DE CONTROLES NAS BLADES **
+-- inseridos dentro das sections
+
+-- @if ($nome == 'ana')
+        true
+   @else
+        false
+   @endif
+
+-- Faz o inverso do if, se a afirmação for == true ele inverte p/ false, se == false, inverte p/ true
+--  @unless ($nome == 'Ana')
+        true
+    @else
+        false
+    @endunless
+
+--  @switch($nome)
+        @case('Ana')
+            Oi, sou ana
+            @break
+        @case('maria')
+            oi, sou maria
+            @break
+        @default
+            oii
+    @endswitch
+
+-- @isset($nome)
+        exist
+    @endisset
+
+--  @empty($nome)
+        está vazia
+    @endempty
+
+-- irá retorna true se o user estiver autenticado
+-- @auth
+        está autenticado
+   @endauth
+
+-- irá retorna true se não houver um user autenticado
+-- @guest
+        não está autenticado
+   @endguest
+
+
+** ESTRUTURAS DE REPETIÇÃO NAS BLADES **
+-- @for ($i = 0; $i <= $count; $i++)
+       {{ $i }}
+   @endfor
+
+-- dentro dele pode ser escrito código php
+-- @php
+        $i = 2;
+   @endphp
+
+-- @while ($i <= 10)
+        {{ $i }}
+        @php $i++ @endphp
+   @endwhile
+
+-- @foreach ($frutas as $fruta)
+        {{ $fruta }}
+   @endforeach
+
+-- p/ conseguir retorna uma resposta se o array estiver vazio use:
+-- @forelse ($frutas as $fruta)
+        {{ $fruta }}
+    @empty
+        Array vazio
+
+    @endforelse
+
+
+** INCLUDES **
+-- criar pasta c/ nome de INCLUDES dentro de views, insira os arq. com o nome, seguido de blade.php
+-- @include('includes.mensag', ['title' => 'Sucesso!']) -> use p/ incluir um arq. que está em includes,
+    ('caminho do arquivo', [par. opcionais que podem ser passados p/ serem recuperado no arquivo incluso])
+
+
+** COMPONENTS **
+-- criar pasta c/ nome de COMPONENTS dentro de views, insira os arq. com o nome, seguido de blade.php
+-- @components('components.mensag') -> use p/ incluir um arq. que está em includes,
+    ('caminho do arquivo', [par. opcionais que podem ser passados p/ serem recuperado no arquivo incluso])
+
+-- com o slot é possivel passar parametros dinamicos, o slot PARAGRAFO pode ser chamado como uma variavel dentro do arq.
+    que está no components
+-- @component('components.sidebar')
+
+       @slot('paragrafo')
+           texto vindo do slot paragrafo
+       @endslot
+
+   @endcomponent
+
+
+** STACKS **
+-- dermina em quais views serão renderizado os scripts, estilos ou arq. externos.
+
+-- se o script for inserido no layout principal, todas as views irá herdar esses componentes. Ao invés de ser colocado o script que
+    vai ser carregado no l.p, insira nele apenas o stacks, e faça o push apenas nos arq. que irão usar aqueles componentes
+    ex: @stack(' style '); @stack(' scripts ')
+
+-- @push(' style ')
+    dentro dele insira o script/estilo/arq.externos que deseja que seja aplicado nessa view
+   @endpush
+
+** APP/PROVIDERS/AppServiceProvider/bot() **
+-- acesse esse dir. p/ listar categorias de forma dinamica, c/ as cat. do bd
+-- share() -> serve p/ compartilhar dados em todas as views. o primeiro parametro é o nome da chave que será usada para
+    chamar as categorias nas views, o seg. par. é a variavel que puxa todas as categorias cadastradas no bd
+-- listar categorias e forma dinamica:
+    ex: $categoriasMenu = Categoria::all()
+        view()->share('categoriasMenu', '$categoriasMenus')
+
+
+** COMPOSER **
+-- composer self-update -> antes de instalar bibliotecas, atualize o composer
+
+** CARINHO DE COMPRAS **
+-- biblioteca de carrinho de compras laravel :
+    use a biblioteca do packagist: darryldecode/card
+
+
+** MIDDLEWARES **
+-- O Middleware é um mecanismo de filtragem de requisição HTTP.
+-- Ele permite ou barra determinados fluxos de requisição que entram na sua aplicação, baseado em regras definidas.
+-- É possivel usar os midd. que o laravel disponibiliza ou criar novos(add o midd. no kernel). ex: make:middleware nomeMidd
+
+    ex:
+    public function handle(Request $request, Closure $next)
+    {
+        // Verifica se user não está logado, se não estiver redireciona p/ page login
+        if (!auth()->check()) {
+            return redirect(route('login.form'));
+        }
+
+        // Se o user estiver autenticado o email dele será capturado
+        $email = auth()->user()->email;
+        // a string será dividida a partir do @
+        $data = explode('@', $email);
+        // recebe tudo que está depois do @
+        $servidorEmail = $data[1];
+
+
+        // Só user que possuem uma conta do servidor gmail poderá acessar rota
+        if ($servidorEmail != 'gmail.com') {
+            # code...
+            return redirect(route('login.form'));
+        }
+
+        return $next($request);
+    }
+
+-- config. o arq. do middleware que vai ser usado. ex: middleware('auth'). add no arq. dele o caminho p/ onde user será direcionado se não tiver autenticado
+-- É possivel add o midd. nas rotas ou no próprio controller
+
+
+** GATES **
+-- Gates são Closures(fechamentos) que determinam se um usuário está autorizado a realizar uma determinada ação ou ver algum recurso
+-- são criados nos arq. providers/authService
+
+** POLICY **
+-- make:policy nomePolicy
+-- após criar o policy registre-o em providers/authServiceProvider
+
+** GATES OU POLICY **
+--Gates servem para autorizar ações personalizadas em uma lógica . Por exemplo:
+    Enviando um e-mail se o usuário puder enviar e-mails.
+    Permitir que um usuário mostre o painel se ele for um administrador.
+    Deixe uma postagem mostrar o histórico de edições se o usuário for o autor.
+
+-- Enquanto isso, as Policy são autorizações CRUD sobre recursos . Por exemplo:
+    Atualizar/excluir a postagem se o usuário for o autor dela
+    Edite uma tag se o usuário for moderador
+    Visualize o índice de rascunhos (todos os rascunhos) se o usuário for moderador.
+
+** CAN E CANNOT **
+-- restringir recursos na view p/ quem não tem autorização
+-- usar o can e cannot, junto c/ gates ou policy
+-- @can('', '') -> use o can na parte do blade que não será mostrada se o user não estiver auth
+
+-- @cannot() -> faz o contrario mostra o conteudo apenas p/ quem não está auth
+
+**  **
+-- Restringir acesso nos controllers com allows e denies
